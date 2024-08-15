@@ -112,7 +112,7 @@ def assess_loan_risk(customer_id, loan_amount):
         messages=[
                     {
                         "role": "system",
-                        "content": """You are a knowledgeable agent specializing in the finance and loans domain, Consider factors such as average cash inflow, spending patterns, and the overall financial stability of the customer.
+                        "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis, Consider factors such as average cash inflow, spending patterns, and the overall financial stability of the customer.
                                     Provide a detailed analysis of the loan risk for Customer 167, including the debt-to-income ratio, any financial stability concerns, and an overall risk assessment (e.g., Low Risk, Medium Risk, High Risk).""",
                     },
                     {
@@ -161,7 +161,7 @@ if st.sidebar.button("Calculate Repayment Plan"):
                 messages=[
                     {
                         "role": "system",
-                        "content": """You are a knowledgeable agent specializing in the finance and loans domain, who checks loan eligibility and structures flexible individual repayment plans based on total credit purchase, total data purchase, total cash in flow and occupation 
+                        "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis, who checks loan eligibility and structures flexible individual repayment plans based on total credit purchase, total data purchase, total cash in flow and occupation 
                                 taking into consideration low and high months and structuring repayment plans around those features, use the customers overall consistency to verify eligibility customer should be consistent for 12 months on at least one of the three features total credit purchase, total data purchase, total cash in flow""",
                     },
                     {
