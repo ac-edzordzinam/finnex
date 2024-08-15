@@ -92,6 +92,12 @@ def calculate_repayment_plan(customer_id, loan_amount):
 
 # Function to assess loan risk
 def assess_loan_risk(customer_id, loan_amount):
+    eligible, message = check_eligibility(customer_id)
+    
+    if not eligible:
+        return None, message
+    
+    
     customer_data_filtered = customer_data[customer_data['CustomerID'] == customer_id]
 
     if customer_data_filtered.empty:
