@@ -97,7 +97,7 @@ def assess_loan_risk(customer_id, loan_amount):
     if not eligible:
         return None, message
     
-    
+
     customer_data_filtered = customer_data[customer_data['CustomerID'] == customer_id]
 
     if customer_data_filtered.empty:
@@ -134,7 +134,7 @@ def assess_loan_risk(customer_id, loan_amount):
     return loan_risk_assessment
 
 # Streamlit interface
-st.title("Flexible Loan Repayment Plan Calculator")
+st.title("FinNex: AI-powered Financial Model  ")
 
 st.sidebar.header("Input Parameters")
 customer_id = st.sidebar.number_input("Customer ID", min_value=1, step=1)
