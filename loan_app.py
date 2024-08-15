@@ -119,7 +119,7 @@ def assess_loan_risk(customer_id, loan_amount):
                     {
                         "role": "system",
                         "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis, Consider factors such as average cash inflow, spending patterns, and the overall financial stability of the customer.
-                                    Provide a detailed analysis of the loan risk for Customer 167, including the debt-to-income ratio, any financial stability concerns, and an overall risk assessment (e.g., Low Risk, Medium Risk, High Risk).""",
+                                    Provide a detailed analysis of the loan risk for the customer, including the debt-to-income ratio, any financial stability concerns, and an overall risk assessment (e.g., Low Risk, Medium Risk, High Risk).""",
                     },
                     {
                         "role": "user", 
