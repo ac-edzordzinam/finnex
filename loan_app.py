@@ -24,9 +24,9 @@ def check_eligibility(customer_id):
         return False, "Customer not found."
 
     # Checking consistency over 12 months for each feature
-    credit_consistency = customer_data_filtered['TotalCallCreditPurchase'].rolling(window=11).min().iloc[-1] > 0
-    data_consistency = customer_data_filtered['TotalDataPurchase'].rolling(window=11).min().iloc[-1] > 0
-    inflow_consistency = customer_data_filtered['TotalCashInflow'].rolling(window=11).min().iloc[-1] > 0
+    credit_consistency = customer_data_filtered['TotalCallCreditPurchase'].rolling(window=12).min().iloc[-1] > 0
+    data_consistency = customer_data_filtered['TotalDataPurchase'].rolling(window=12).min().iloc[-1] > 0
+    inflow_consistency = customer_data_filtered['TotalCashInflow'].rolling(window=12).min().iloc[-1] > 0
 
     if credit_consistency or data_consistency or inflow_consistency:
         return True, "Customer is eligible for a loan."
