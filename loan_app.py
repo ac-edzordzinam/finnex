@@ -68,13 +68,20 @@ def calculate_repayment_plan(customer_id, loan_amount):
         else:
             current_inflow = customer_data_filtered.iloc[month_index]['TotalCashInflow']
 
-        # Adjust repayment based on monthly inflow
-        if current_inflow < 0.9 * average_inflow:
-            repayment = monthly_repayment * 0.5
-        elif current_inflow > 1.1 * average_inflow:
-            repayment = monthly_repayment * 1.5
+    # If the loan amount is less than or equal to the current inflow, pay off the loan in full
+        if total_loan <= current_inflow:
+            repayment = remaining_loan
         else:
-            repayment = monthly_repayment
+            # Adjust repayment based on monthly inflow
+            average_inflow = customer_data_filtered['TotalCashInflow'].mean()
+            monthly_repayment = average_inflow * 0.1
+            
+            if current_inflow < 0.9 * average_inflow:
+                repayment = monthly_repayment * 0.5
+            elif current_inflow > 1.1 * average_inflow:
+                repayment = monthly_repayment * 1.5
+            else:
+                repayment = monthly_repayment
 
         remaining_loan -= repayment
         repayment_plan.append({
