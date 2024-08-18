@@ -141,7 +141,7 @@ st.title("FinNex: AI-powered Financial Model  ")
 placeholder = st.empty()
 placeholder.markdown(
     """
-    ## Welcome to the Loan Repayment Plan System
+    ### Welcome to the Financial Nexus
 
 This application is designed to assist in calculating flexible loan repayment plans, determining loan eligibility, and assessing loan risk based on detailed customer data.
 
