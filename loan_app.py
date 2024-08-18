@@ -171,6 +171,7 @@ loan_amount = st.sidebar.number_input("Loan Amount", min_value=1, step=1)
 if st.sidebar.button("Check Loan Eligibility"):
     with st.spinner("Checking eligibility..."):
         eligible, message = check_eligibility(customer_id)
+        placeholder.empty()  # Clear the placeholder content
         st.subheader("Eligibility Check")
         st.write(message)
 
@@ -178,7 +179,9 @@ if st.sidebar.button("Check Loan Eligibility"):
 if st.sidebar.button("Calculate Repayment Plan"):
     with st.spinner("Calculating..."):
         repayment_plan, error = calculate_repayment_plan(customer_id, loan_amount)
-        
+        placeholder.empty()  # Clear the placeholder content
+
+
         if error:
             st.error(error)
         else:
@@ -213,5 +216,6 @@ if st.sidebar.button("Calculate Repayment Plan"):
 if st.sidebar.button("Assess Loan Risk"):
     with st.spinner("Assessing loan risk..."):
         loan_risk = assess_loan_risk(customer_id, loan_amount)
+        placeholder.empty()  # Clear the placeholder content
         st.subheader("Loan Risk Assessment")
         st.write(loan_risk)
