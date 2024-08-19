@@ -15,6 +15,11 @@ customer_data = load_data()
 api_key = os.environ.get("OPENAI_API_KEY") or st.secrets["OPENAI_API_KEY"] 
 client = OpenAI(api_key=api_key,)
 
+def calculate_max_loan_amount(customer_data_filtered):
+    # Determine the maximum allowable loan amount (20 times the highest cash inflow)
+    max_loan_amount = customer_data_filtered['TotalCashInflow'].max() * 20
+    return max_loan_amount
+
 
 # Function to check loan eligibility
 def check_eligibility(customer_id):
@@ -28,11 +33,12 @@ def check_eligibility(customer_id):
     data_consistency = customer_data_filtered['TotalDataPurchase'].rolling(window=12).min().iloc[-1] > 0
     inflow_consistency = customer_data_filtered['TotalCashInflow'].rolling(window=12).min().iloc[-1] > 0
 
+  # Check if the customer is consistent in at least one of the three features
     if credit_consistency or data_consistency or inflow_consistency:
-        return True, "Customer is eligible for a loan."
+        max_loan_amount = calculate_max_loan_amount(customer_data_filtered)
+        return True, f"Customer is eligible for a loan. The maximum allowable loan amount is {max_loan_amount:.2f} Ghana Cedis."
     else:
-        return False, "Customer is not eligible for a loan."
-
+        return False, "Customer is not eligible for a loan based on consistency criteria."
 
 
 # Function to calculate the repayment plan
@@ -48,6 +54,15 @@ def calculate_repayment_plan(customer_id, loan_amount):
 
     if customer_data_filtered.empty:
         return None, "Customer not found."
+    
+
+    # Get the maximum allowable loan amount using the external function
+    max_loan_amount = calculate_max_loan_amount(customer_data_filtered)
+    
+    if loan_amount > max_loan_amount:
+        return None, f"Requested loan amount exceeds the limit. The maximum allowable loan amount is {max_loan_amount:.2f} Ghana Cedis."
+
+
 
     # Add 20% interest to the loan amount
     total_loan = loan_amount * 1.2
