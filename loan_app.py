@@ -98,6 +98,16 @@ def calculate_repayment_plan(customer_id, loan_amount):
             else:
                 repayment = monthly_repayment
 
+    # Adjust the repayment in the last month if the remaining balance is less than the calculated monthly repayment
+        if remaining_loan <= repayment:
+            repayment = remaining_loan
+            remaining_loan = 0  # The loan is fully paid off
+        else:
+            remaining_loan -= repayment
+
+
+
+
         remaining_loan -= repayment
         repayment_plan.append({
             'Month': month_index + 1,
