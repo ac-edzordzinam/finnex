@@ -218,6 +218,16 @@ if st.sidebar.button("Check Loan Eligibility"):
         st.subheader("Eligibility Check")
         st.write(message)
 
+
+# Button to assess loan risk
+if st.sidebar.button("Assess Loan Risk"):
+    with st.spinner("Assessing loan risk..."):
+        placeholder.empty()  # Clear the placeholder content
+        loan_risk = assess_loan_risk(customer_id, loan_amount)
+        st.subheader("Loan Risk Assessment")
+        st.write(loan_risk)
+        
+
 # Button to calculate repayment plan
 if st.sidebar.button("Calculate Repayment Plan"):
     with st.spinner("Calculating..."):
@@ -262,10 +272,3 @@ if st.sidebar.button("Calculate Repayment Plan"):
             st.subheader("Summary")
             st.write(summary)
 
-# Button to assess loan risk
-if st.sidebar.button("Assess Loan Risk"):
-    with st.spinner("Assessing loan risk..."):
-        placeholder.empty()  # Clear the placeholder content
-        loan_risk = assess_loan_risk(customer_id, loan_amount)
-        st.subheader("Loan Risk Assessment")
-        st.write(loan_risk)
