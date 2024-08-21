@@ -70,6 +70,7 @@ def calculate_repayment_plan(customer_id, loan_amount):
     # Start calculating the repayment plan
     repayment_plan = []
     remaining_loan = total_loan
+    cumulative_repayment = 0
 
     # Determine the average inflow to calculate the monthly repayment
     average_inflow = customer_data_filtered['TotalCashInflow'].mean()
@@ -107,12 +108,12 @@ def calculate_repayment_plan(customer_id, loan_amount):
 
 
 
-
+        cumulative_repayment += repayment  
         remaining_loan -= repayment
         repayment_plan.append({
             'Month': month_index + 1,
             'FlexibleRepayment': repayment,
-            'CumulativeRepayment': total_loan - remaining_loan,
+            'CumulativeRepayment': cumulative_repayment,
             'RemainingLoan': max(0, remaining_loan)  # Ensure we don't show negative balance
         })
 
@@ -135,7 +136,13 @@ def assess_loan_risk(customer_id, loan_amount):
     if customer_data_filtered.empty:
         return "Customer not found."
 
+     # Get the maximum allowable loan amount using the external function
+    max_loan_amount = calculate_max_loan_amount(customer_data_filtered)
     
+    if loan_amount > max_loan_amount:
+        return None, f"Requested loan amount exceeds the limit. The maximum allowable loan amount is {max_loan_amount:.2f} Ghana Cedis."
+
+
 
     customer_summary = customer_data_filtered.describe().to_string()
 
@@ -179,7 +186,8 @@ This application is designed to assist in calculating flexible loan repayment pl
 
 ### Overview:
 - **Dataset**: The system contains data for 200 customers.
-- **Eligibility Criteria**: A customer is eligible for a loan if they demonstrate consistency in at least one of the following areas for 12 months:
+- **Eligibility Criteria**: A customer is eligible for a loan if they demonstrate consistency in at least one of the following areas for 12 months: Maximum amount eligible is calculated as 
+20 times their highest income for longer term loans. 
   - **Credit Purchases**
   - **Data Purchases**
   - **Mobile Money (MoMo) Cash Inflow**
