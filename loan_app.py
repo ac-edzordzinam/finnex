@@ -15,11 +15,16 @@ customer_data = load_data()
 api_key = os.environ.get("OPENAI_API_KEY") or st.secrets["OPENAI_API_KEY"] 
 client = OpenAI(api_key=api_key,)
 
+# Function to calculate max loan amount
 def calculate_max_loan_amount(customer_data_filtered):
     # Determine the maximum allowable loan amount (20 times the highest cash inflow)
     max_loan_amount = customer_data_filtered['TotalCashInflow'].max() * 20
     return max_loan_amount
 
+# Function to calculate total loan repayment
+def calculate_total_loan_repayment(loan_amount):
+    total_repayment = loan_amount * 1.2  # Adding 20% interest
+    return total_repayment
 
 # Function to check loan eligibility
 def check_eligibility(customer_id):
@@ -64,17 +69,15 @@ def calculate_repayment_plan(customer_id, loan_amount):
 
 
 
-    # Add 20% interest to the loan amount
-    total_loan = loan_amount * 1.2
+    # Calculate the total loan repayment using the new function
+    total_loan = calculate_total_loan_repayment(loan_amount)
 
     # Start calculating the repayment plan
     repayment_plan = []
     remaining_loan = total_loan
     cumulative_repayment = 0
 
-    # Determine the average inflow to calculate the monthly repayment
-    average_inflow = customer_data_filtered['TotalCashInflow'].mean()
-    monthly_repayment = average_inflow * 0.1
+    
 
     month_index = 0
 
@@ -230,15 +233,22 @@ if st.sidebar.button("Calculate Repayment Plan"):
 
 
             
-            prompt = f"Customer ID: {customer_id}\nLoan Amount: {loan_amount}\n\nRepayment Plan:\n{repayment_plan.to_string(index=False)}\n\nProvide a summary of the repayment plan considering the flexible repayment amounts."
-
+            prompt = (
+                f"Customer ID: {customer_id}\n"
+                f"Loan Amount: {loan_amount}\n\n"
+                f"Repayment Plan:\n{repayment_plan.to_string(index=False)}\n\n"
+                
+                "Provide a summary of the repayment plan considering the flexible repayment amounts."
+            )
             
             chat_completion = client.chat.completions.create(
                 messages=[
                     {
                         "role": "system",
-                        "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis, who checks loan eligibility and structures flexible individual repayment plans based on total credit purchase, total data purchase, total cash in flow and occupation 
-                                taking into consideration low and high months and structuring repayment plans around those features, use the customers overall consistency to verify eligibility customer should be consistent for 12 months on at least one of the three features total credit purchase, total data purchase, total cash in flow""",
+                        "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis,
+                          who checks loan eligibility and structures flexible individual repayment plans and Total Loan Repayment (including 20 percent interest) based on total credit purchase, total data purchase, 
+                          total cash in flow and occupation taking into consideration low and high months and structuring repayment plans  around those features,
+                            use the customers overall consistency to verify eligibility customer """,
                     },
                     {
                         "role": "user", 
@@ -255,7 +265,7 @@ if st.sidebar.button("Calculate Repayment Plan"):
 # Button to assess loan risk
 if st.sidebar.button("Assess Loan Risk"):
     with st.spinner("Assessing loan risk..."):
-        loan_risk = assess_loan_risk(customer_id, loan_amount)
         placeholder.empty()  # Clear the placeholder content
+        loan_risk = assess_loan_risk(customer_id, loan_amount)
         st.subheader("Loan Risk Assessment")
         st.write(loan_risk)
