@@ -277,8 +277,8 @@ if st.sidebar.button("Calculate Repayment Plan"):
                         "role": "system",
                         "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis,do not show any formulas just results
                           who checks loan eligibility and structures flexible individual repayment plans and Total Loan Repayment (including the interest) based on total credit purchase, total data purchase, 
-                          total cash in flow and occupation taking into consideration low and high months and structuring repayment plans  around those features.
-                            State what would be payed fixed monthly through regular payments for different time periods and state the time periods for Total Loan Repayment (including the interest) if flexibilility is not accounted for.""",
+                          total cash in flow and occupation taking into consideration low and high months and structuring repayment plans  around those features,
+                            state what would be payed fixed monthly through regular payments for different time periods and state the time periods for Total Loan Repayment (including the interest) if flexibilility is not accounted for.""",
                     },
                     {
                         "role": "user", 
