@@ -199,6 +199,7 @@ st.title("FinNex: AI-powered Financial Model  ")
 
 # Placeholder for initial text or information
 placeholder = st.empty()
+#st.write("something")
 placeholder.markdown(
     """
     ### Welcome to the Financial Nexus
@@ -247,12 +248,12 @@ if st.sidebar.button("Assess Loan Risk"):
         
 
 # Button to calculate repayment plan
-placeholder.empty()  # Clear the placeholder content
+
 if st.sidebar.button("Calculate Repayment Plan"):
     with st.spinner("Calculating..."):
         repayment_plan, error = calculate_repayment_plan(customer_id, loan_amount)
         
-
+        placeholder.empty()  # Clear the placeholder content    
 
         if error:
             st.error(error)
