@@ -21,10 +21,7 @@ def calculate_max_loan_amount(customer_data_filtered):
     max_loan_amount = customer_data_filtered['TotalCashInflow'].max() * 20
     return max_loan_amount
 
-# Function to calculate total loan repayment
-def calculate_total_loan_repayment(loan_amount):
-    total_repayment = loan_amount * 1.2  # Adding 20% interest
-    return total_repayment
+
 
 # Function to check loan eligibility
 def check_eligibility(customer_id):
@@ -52,14 +49,11 @@ def calculate_repayment_plan(customer_id, loan_amount):
     
     if not eligible:
         return None, message
-
-
     
     customer_data_filtered = customer_data[customer_data['CustomerID'] == customer_id]
 
     if customer_data_filtered.empty:
         return None, "Customer not found."
-    
 
     # Get the maximum allowable loan amount using the external function
     max_loan_amount = calculate_max_loan_amount(customer_data_filtered)
@@ -67,32 +61,32 @@ def calculate_repayment_plan(customer_id, loan_amount):
     if loan_amount > max_loan_amount:
         return None, f"Requested loan amount exceeds the limit. The maximum allowable loan amount is {max_loan_amount:.2f} Ghana Cedis."
 
-
-
-    # Calculate the total loan repayment using the new function
-    total_loan = calculate_total_loan_repayment(loan_amount)
-
     # Start calculating the repayment plan
     repayment_plan = []
-    remaining_loan = total_loan
+    remaining_loan = loan_amount
     cumulative_repayment = 0
+    total_repayment_duration = 0 
 
-    
+    # List to store amounts for each month
+    monthly_repayments = []
+
+    # Use this to calculate the monthly repayment based on average inflow
+    average_inflow = customer_data_filtered['TotalCashInflow'].mean()
 
     month_index = 0
 
     while remaining_loan > 0:
-        if month_index >= len(customer_data_filtered):
-            current_inflow = average_inflow  # Use average if we exceed data length
-        else:
-            current_inflow = customer_data_filtered.iloc[month_index]['TotalCashInflow']
+        # Wrap the month_index around if it exceeds the DataFrame length
+        current_month_index = month_index % len(customer_data_filtered)
+        
+        # Get the current month's inflow
+        current_inflow = customer_data_filtered.iloc[current_month_index]['TotalCashInflow']
 
-    # If the loan amount is less than or equal to the current inflow, pay off the loan in full
-        if total_loan <= current_inflow:
+        # If the total loan is less than or equal to the current inflow, pay off the loan in full
+        if remaining_loan <= current_inflow:
             repayment = remaining_loan
         else:
             # Adjust repayment based on monthly inflow
-            average_inflow = customer_data_filtered['TotalCashInflow'].mean()
             monthly_repayment = average_inflow * 0.1
             
             if current_inflow < 0.9 * average_inflow:
@@ -102,29 +96,53 @@ def calculate_repayment_plan(customer_id, loan_amount):
             else:
                 repayment = monthly_repayment
 
-    # Adjust the repayment in the last month if the remaining balance is less than the calculated monthly repayment
-        if remaining_loan <= repayment:
+        # Adjust the repayment in the last month if the remaining balance is less than the calculated monthly repayment
+        if remaining_loan < repayment:
             repayment = remaining_loan
             remaining_loan = 0  # The loan is fully paid off
         else:
             remaining_loan -= repayment
 
+        #cumulative_repayment += repayment
+        total_repayment_duration += 1  # Increment the repayment duration
 
+        # Store the repayment amount for this month
+        monthly_repayments.append(repayment)
 
-        cumulative_repayment += repayment  
-        remaining_loan -= repayment
         repayment_plan.append({
             'Month': month_index + 1,
             'FlexibleRepayment': repayment,
-            'CumulativeRepayment': cumulative_repayment,
+           # 'CumulativeRepayment': cumulative_repayment,
             'RemainingLoan': max(0, remaining_loan)  # Ensure we don't show negative balance
         })
 
         month_index += 1
+    #print(total_repayment_duration)
+    # After the loop, calculate the simple interest (SI)
+    
+    R = 20  # 20% annual interest rate
+    T = total_repayment_duration / 12  # Time in years
+    P = loan_amount
+    SI = (P * R * T) / 100  # Simple Interest
+    MI =SI / total_repayment_duration
+    #print(SI)
+
+     # Reassign remaining_loan to include the simple interest
+    remaining_loan = loan_amount + SI
+
+    # Now, add the interest and update the cumulative repayment
+    cumulative_repayment = 0
+    for i in range(len(repayment_plan)):
+        repayment_plan[i]['FlexibleRepayment'] += MI
+        cumulative_repayment += repayment_plan[i]['FlexibleRepayment']
+        repayment_plan[i]['CumulativeRepayment'] = cumulative_repayment
+        repayment_plan[i]['RemainingLoan'] = remaining_loan - cumulative_repayment  # Update remaining loan with interest considered
 
     repayment_df = pd.DataFrame(repayment_plan)
 
     return repayment_df, None
+
+
 
 # Function to assess loan risk
 def assess_loan_risk(customer_id, loan_amount):
@@ -199,7 +217,7 @@ This application is designed to assist in calculating flexible loan repayment pl
 
 ### How to Use:
 - Use the sidebar to input the customer's ID and the desired loan amount.
-- Select an operation to either check loan eligibility, calculate a repayment plan, or assess loan risk.
+- Select an operation to either check loan eligibility, calculate a flexible repayment plan, or assess loan risk.
 
 This tool offers a comprehensive and tailored approach to loan management, ensuring both customer satisfaction and financial security.
     """
@@ -229,10 +247,11 @@ if st.sidebar.button("Assess Loan Risk"):
         
 
 # Button to calculate repayment plan
+placeholder.empty()  # Clear the placeholder content
 if st.sidebar.button("Calculate Repayment Plan"):
     with st.spinner("Calculating..."):
         repayment_plan, error = calculate_repayment_plan(customer_id, loan_amount)
-        placeholder.empty()  # Clear the placeholder content
+        
 
 
         if error:
@@ -255,10 +274,10 @@ if st.sidebar.button("Calculate Repayment Plan"):
                 messages=[
                     {
                         "role": "system",
-                        "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis,
-                          who checks loan eligibility and structures flexible individual repayment plans and Total Loan Repayment (including 20 percent interest) based on total credit purchase, total data purchase, 
-                          total cash in flow and occupation taking into consideration low and high months and structuring repayment plans  around those features,
-                            use the customers overall consistency to verify eligibility customer """,
+                        "content": """You are a knowledgeable agent specializing in the finance and loans domain in Ghana all currency is in Ghana cedis,do not show any formulas just results
+                          who checks loan eligibility and structures flexible individual repayment plans and Total Loan Repayment (including the interest) based on total credit purchase, total data purchase, 
+                          total cash in flow and occupation taking into consideration low and high months and structuring repayment plans  around those features.
+                            State what would be payed fixed monthly through regular payments for different time periods and state the time periods for Total Loan Repayment (including the interest) if flexibilility is not accounted for.""",
                     },
                     {
                         "role": "user", 
