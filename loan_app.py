@@ -225,9 +225,16 @@ st.markdown(
             position: relative; /* Ensure content is positioned above the blurred background */
             z-index: 1;
             padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for content */
+            background-color: rgba(255, 255, 255, 0.8)!important; /* Semi-transparent background for content */
             border-radius: 10px;
         }}
+        
+         /* Override any mode-specific styling to keep text color consistent */
+        [data-testid="stAppViewContainer"] * {{
+            color: #FFFFFF ; /* Force text color to black */
+        
+        }}
+    </style>
     </style>
     """,
     unsafe_allow_html=True
