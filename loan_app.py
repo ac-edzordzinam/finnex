@@ -196,6 +196,42 @@ def assess_loan_risk(customer_id, loan_amount):
 # Streamlit interface
 st.title("FinNex: AI-powered Financial Model  ")
 
+st.markdown(
+    f"""
+    <style>
+        /* Change the background color of the sidebar */
+        [data-testid="stSidebar"] {{
+            background-color: #10233a;
+        }}
+         /* Create a blurred background image using a pseudo-element */
+        [data-testid="stAppViewContainer"]::before {{
+            content: "";
+            background-image: linear-gradient(rgba(30, 34, 34, 0.9), rgba(30, 17, 17, 0.9)), url("https://lh5.googleusercontent.com/proxy/2_Y_m-NMswaXK0P7H3YliSskCDk8DitFeHYQMnxFvRuk7-ZyeULIl5Qp3vX4O44_oSK20z43V7UD_WX3U53RGrD_LW_5TYaM2A9irpilE9_KbwkmUHynvKhJIxfaF60-UoE1JRNXKUjAxGeWSv33eVvpiupaL-VNj0gikLOkRG2D4_9nBULkbRJ5Gr2ZRCV7bKmgLN0hNKFvehJ7iCC7dhbpeWi3hRpo1ts");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            # filter: blur(8px); /* Adjust the blur radius here */
+            z-index: 0; /* Ensure the background is behind the content */
+        }}
+
+        
+        /* Ensure that the content and other elements are not blurred */
+        [data-testid="stAppViewContainer"] > div {{
+            position: relative; /* Ensure content is positioned above the blurred background */
+            z-index: 1;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for content */
+            border-radius: 10px;
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Placeholder for initial text or information
 placeholder = st.empty()
