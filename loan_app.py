@@ -4,6 +4,11 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
+st.set_page_config(
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 load_dotenv()
 # Load the customer data
 @st.cache_data
@@ -196,9 +201,13 @@ def assess_loan_risk(customer_id, loan_amount):
 # Streamlit interface
 st.title("FinNex: AI-powered Financial Model  ")
 
+
+
 st.markdown(
     f"""
     <style>
+
+
         /* Change the background color of the sidebar */
         [data-testid="stSidebar"] {{
             background-color: #10233a;
@@ -225,16 +234,12 @@ st.markdown(
             position: relative; /* Ensure content is positioned above the blurred background */
             z-index: 1;
             padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8)!important; /* Semi-transparent background for content */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for content */
             border-radius: 10px;
         }}
         
-         /* Override any mode-specific styling to keep text color consistent */
-        [data-testid="stAppViewContainer"] * {{
-            color: #FFFFFF ; /* Force text color to black */
         
-        }}
-    </style>
+    
     </style>
     """,
     unsafe_allow_html=True

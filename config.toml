@@ -1,0 +1,8 @@
+# .streamlit/config.toml
+
+[theme]
+primaryColor = "#1a73e8"  # Customize as needed
+backgroundColor = "#0e1117"  # Background for the app
+secondaryBackgroundColor = "#262730"  # Background for containers like the sidebar
+textColor = "#ffffff"  # Main text color
+font = "sans serif"  # Choose your font: serif, sans serif, monospace
