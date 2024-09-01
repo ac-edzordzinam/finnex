@@ -266,15 +266,6 @@ st.markdown(
             color: #ffffff !important; /* Set label and input text color to white */
         }}
 
-         /* Dark mode sidebar arrow color */
-        [data-testid="stSidebar"] .css-1c6vkmr {{
-            filter: invert(1); /* Invert colors for dark mode */
-        }}
-
-        /* Light mode sidebar arrow color */
-        [data-testid="stSidebar"] .css-1c6vkmr[data-theme="light"] {{
-            filter: invert(0); /* No color inversion for light mode */
-        }}
 
     
     </style>
