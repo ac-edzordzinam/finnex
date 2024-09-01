@@ -199,10 +199,6 @@ def assess_loan_risk(customer_id, loan_amount):
     return loan_risk_assessment
 
 # Streamlit interface
-st.title("FinNex: AI-powered Financial Model  ")
-
-
-
 st.markdown(
     f"""
     <style>
@@ -238,12 +234,55 @@ st.markdown(
             border-radius: 10px;
         }}
         
+        /* Ensure main page text is white in both light and dark modes */
+        [data-testid="stAppViewContainer"] {{
+            color: #ffffff; /* Set text color to white for main content */
+        }}
+
+        /* Maintain default sidebar styling (no change) */
+        [data-testid="stSidebar"] {{
+            color: initial; /* Reset color to default for the sidebar */
+        }}
         
+        /* Force text color to white for all elements in the main content area */
+        [data-testid="stAppViewContainer"] {{
+            color: #ffffff !important; /* Set text color to white for main content */
+        }}
+
+        /* Force text color to white for all headings */
+        [data-testid="stAppViewContainer"] h1,
+        [data-testid="stAppViewContainer"] h2,
+        [data-testid="stAppViewContainer"] h3,
+        [data-testid="stAppViewContainer"] h4,
+        [data-testid="stAppViewContainer"] h5,
+        [data-testid="stAppViewContainer"] h6 {{
+            color: #ffffff !important; /* Set heading color to white */
+        }}
+
+         /* Force white text color for input labels and other interactive elements */
+        [data-testid="stAppViewContainer"] label,
+        [data-testid="stAppViewContainer"] .stTextInput
+        {{
+            color: #ffffff !important; /* Set label and input text color to white */
+        }}
+
+         /* Dark mode sidebar arrow color */
+        [data-testid="stSidebar"] .css-1c6vkmr {{
+            filter: invert(1); /* Invert colors for dark mode */
+        }}
+
+        /* Light mode sidebar arrow color */
+        [data-testid="stSidebar"] .css-1c6vkmr[data-theme="light"] {{
+            filter: invert(0); /* No color inversion for light mode */
+        }}
+
     
     </style>
     """,
     unsafe_allow_html=True
 )
+
+st.title("FinNex: AI-powered Financial Model  ")
 
 # Placeholder for initial text or information
 placeholder = st.empty()
